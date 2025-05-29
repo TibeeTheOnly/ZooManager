@@ -1,0 +1,132 @@
+﻿<!-- MainWindow.xaml -->
+<Window x:Class="ZooManager.ControlPanel"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Zoo Manager" Height="800" Width="1200"
+        WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Border Grid.Row="0" Background="#FF2C3E50" Padding="15">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0" Orientation="Horizontal">
+                    <TextBlock Text="🦁 Zoo Manager" FontSize="24" FontWeight="Bold" Foreground="White" VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="User: " Foreground="White" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                    <TextBlock x:Name="CurrentUserTextBlock" Foreground="White" FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                    <TextBlock Text="(" Foreground="White" VerticalAlignment="Center"/>
+                    <TextBlock x:Name="UserRoleTextBlock" Foreground="White" VerticalAlignment="Center"/>
+                    <TextBlock Text=")" Foreground="White" VerticalAlignment="Center" Margin="0,0,15,0"/>
+
+                    <Button x:Name="AdminPanelButton" Content="Admin Panel" 
+                            Click="AdminPanelButton_Click" 
+                            Background="#FF2C3E90" BorderBrush="White" Foreground="White"
+                            Padding="10,5" Margin="0,0,10,0"/>
+
+                    <Button Content="Refresh" Click="RefreshButton_Click"
+                            Background="#FF2C3E90" BorderBrush="White" Foreground="White"
+                            Padding="10,5" Margin="0,0,10,0"/>
+
+                    <Button Content="Logout" Click="LogoutButton_Click"
+                            Background="#C62828" BorderBrush="White" Foreground="White"
+                            Padding="10,5"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Main Content -->
+        <Grid Grid.Row="1" Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Habitats Section -->
+            <GroupBox Grid.Column="0" Header="Habitats" FontSize="16" FontWeight="Bold">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,10">
+                        <TextBlock Text="Total Habitats: " VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding Habitats.Count}" FontWeight="Bold" VerticalAlignment="Center"/>
+                    </StackPanel>
+
+                    <DataGrid Grid.Row="1" x:Name="HabitatsDataGrid" 
+                              ItemsSource="{Binding Habitats}"
+                              SelectedItem="{Binding SelectedHabitat}"
+                              AutoGenerateColumns="False" 
+                              IsReadOnly="True">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="150"/>
+                            <DataGridTextColumn Header="Type" Binding="{Binding Type}" Width="120"/>
+                            <DataGridTextColumn Header="Occupancy" Width="100">
+                                <DataGridTextColumn.Binding>
+                                    <MultiBinding StringFormat="{}{0}/{1}">
+                                        <Binding Path="CurrentOccupancy"/>
+                                        <Binding Path="Capacity"/>
+                                    </MultiBinding>
+                                </DataGridTextColumn.Binding>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="Temperature" Binding="{Binding Temperature, StringFormat={}{0:F1}°C}" Width="100"/>
+                            <DataGridTextColumn Header="Humidity" Binding="{Binding Humidity, StringFormat={}{0:F1}%}" Width="100"/>
+                            <DataGridTextColumn Header="Last Cleanup" Binding="{Binding LastCleanup, StringFormat=dd/MM/yyyy}" Width="120"/>
+                            <DataGridTextColumn Header="Next Cleanup" Binding="{Binding NextScheduledCleanup, StringFormat=dd/MM/yyyy}" Width="120"/>
+                            <DataGridCheckBoxColumn Header="Active" Binding="{Binding IsActive}" Width="60"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </GroupBox>
+
+            <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" Background="LightGray"/>
+
+            <!-- Recent Activities Section -->
+            <GroupBox Grid.Column="2" Header="Recent Activities" FontSize="16" FontWeight="Bold">
+                <ListView ItemsSource="{Binding RecentActivities}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Border BorderBrush="LightGray" BorderThickness="1" Padding="10" Margin="0,2">
+                                <StackPanel>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding Type}" FontWeight="Bold" Foreground="#2E7D32"/>
+                                        <TextBlock Text=" - " Margin="5,0"/>
+                                        <TextBlock Text="{Binding PerformedAt, StringFormat=dd/MM/yyyy HH:mm}"/>
+                                    </StackPanel>
+                                    <TextBlock Text="{Binding Description}" Margin="0,5,0,0" TextWrapping="Wrap"/>
+                                    <TextBlock Text="{Binding PerformedBy}" FontStyle="Italic" FontSize="12" Foreground="Gray"/>
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </GroupBox>
+        </Grid>
+
+        <!-- Status Bar -->
+        <StatusBar Grid.Row="2" Background="#F5F5F5">
+            <StatusBarItem>
+                <TextBlock Text="Ready"/>
+            </StatusBarItem>
+            <Separator/>
+            <StatusBarItem>
+                <TextBlock Text="{Binding Source={x:Static sys:DateTime.Now}, StringFormat=dd/MM/yyyy HH:mm:ss}" 
+                           xmlns:sys="clr-namespace:System;assembly=mscorlib"/>
+            </StatusBarItem>
+        </StatusBar>
+    </Grid>
+</Window>

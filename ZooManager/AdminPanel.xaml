@@ -1,0 +1,85 @@
+﻿<Window x:Class="ZooManager.AdminPanel"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Zoo Manager - Admin Panel" Height="600" Width="800"
+        WindowStartupLocation="CenterScreen">
+    <Grid Background="#FF2C3E50">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <StackPanel Grid.Row="0" Background="#FF34495E" Orientation="Horizontal" Height="60">
+            <TextBlock Text="Admin Panel" FontSize="24" FontWeight="Bold" 
+                      Foreground="White" VerticalAlignment="Center" Margin="20,0"/>
+            <Button Content="Logout" Width="80" Height="30" Margin="500,0,20,0"
+                   VerticalAlignment="Center" Click="LogoutButton_Click"/>
+        </StackPanel>
+
+        <!-- Tab Control -->
+        <TabControl Grid.Row="1" Margin="10">
+            <TabItem Header="User Management">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="200"/>
+                    </Grid.ColumnDefinitions>
+
+                    <DataGrid x:Name="UsersDataGrid" Grid.Column="0" Margin="10"
+                             AutoGenerateColumns="False" CanUserAddRows="False">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Username" Binding="{Binding Username}" Width="*"/>
+                            <DataGridCheckBoxColumn Header="Is Admin" Binding="{Binding IsAdmin}" Width="80"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <StackPanel Grid.Column="1" Margin="10">
+                        <TextBlock Text="Add New User" FontWeight="Bold" Margin="0,0,0,10"/>
+                        <TextBox x:Name="NewUsernameTextBox" Margin="0,0,0,5" 
+                                Text="{Binding NewUsername, UpdateSourceTrigger=PropertyChanged}"/>
+                        <PasswordBox x:Name="NewPasswordBox" Margin="0,0,0,5"/>
+                        <CheckBox x:Name="IsAdminCheckBox" Content="Is Admin" Margin="0,0,0,10"/>
+                        <Button Content="Add User" Click="AddUserButton_Click" Margin="0,0,0,10"/>
+                        <Button Content="Delete Selected" Click="DeleteUserButton_Click"/>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="Habitat Management">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="250"/>
+                    </Grid.ColumnDefinitions>
+
+                    <DataGrid x:Name="HabitatsDataGrid" Grid.Column="0" Margin="10"
+                             AutoGenerateColumns="False" CanUserAddRows="False">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*"/>
+                            <DataGridTextColumn Header="Animal Type" Binding="{Binding AnimalType}" Width="*"/>
+                            <DataGridTextColumn Header="Capacity" Binding="{Binding Capacity}" Width="80"/>
+                            <DataGridTextColumn Header="Current" Binding="{Binding CurrentAnimals}" Width="80"/>
+                            <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="100"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <StackPanel Grid.Column="1" Margin="10">
+                        <TextBlock Text="Add New Habitat" FontWeight="Bold" Margin="0,0,0,10"/>
+                        <TextBox x:Name="HabitatNameTextBox" Margin="0,0,0,5" 
+                                Text="{Binding NewHabitatName, UpdateSourceTrigger=PropertyChanged}"/>
+                        <TextBox x:Name="AnimalTypeTextBox" Margin="0,0,0,5"
+                                Text="{Binding NewAnimalType, UpdateSourceTrigger=PropertyChanged}"/>
+                        <TextBox x:Name="CapacityTextBox" Margin="0,0,0,5"
+                                Text="{Binding NewCapacity, UpdateSourceTrigger=PropertyChanged}"/>
+                        <TextBox x:Name="CurrentAnimalsTextBox" Margin="0,0,0,5"
+                                Text="{Binding NewCurrentAnimals, UpdateSourceTrigger=PropertyChanged}"/>
+                        <Button Content="Add Habitat" Click="AddHabitatButton_Click" Margin="0,0,0,10"/>
+                        <Button Content="Delete Selected" Click="DeleteHabitatButton_Click"/>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>
